@@ -53,30 +53,27 @@ class MapsActivity : FragmentActivity(), OnMapReadyCallback {
         val intent = intent
         val location = intent.getStringExtra(MainActivity.EXTRA_LOCATION)
 
-        var addressList: List<Address>? = null
 
-        if (location != null || location != "") {
-            val geocoder = Geocoder(this)
-            try {
-                addressList = geocoder.getFromLocationName(location, 1)
+        val geocoder = Geocoder(this)
+        try {
 
-            } catch (e: IOException) {
-                e.printStackTrace()
+            var geoResults = geocoder.getFromLocationName(location, 1)
+            while (geoResults.size ==0) {
+                geoResults = geocoder.getFromLocationName(location, 1)
             }
+            if (geoResults.size >0) {
+                var addr = geoResults.get(0)
+                var latLng = LatLng(addr.getLatitude(), addr.getLongitude())
+                mMap!!.addMarker(MarkerOptions().position(latLng).title(location.toString()))
+                mMap!!.moveCamera(CameraUpdateFactory.newLatLng(latLng))
 
+            }
+        }
+        catch (e: IOException) {
+            e.printStackTrace()
         }
 
-            val address = addressList!![0]
-            val admin = address.adminArea
-            val locality = address.locality
-            val country = address.countryName
-            val Snip = "Country - " + country + ",State - " + admin + ",City - " + locality;
-            val latLng = LatLng(address.getLatitude(), address.getLongitude())
 
-
-
-        mMap!!.addMarker(MarkerOptions().position(latLng).title(location.toString()).snippet(Snip.toString()))
-        mMap!!.moveCamera(CameraUpdateFactory.newLatLng(latLng))
 
     }
 }
