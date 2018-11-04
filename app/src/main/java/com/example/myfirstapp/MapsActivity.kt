@@ -63,8 +63,9 @@ class MapsActivity : FragmentActivity(), OnMapReadyCallback {
             }
             if (geoResults.size >0) {
                 var addr = geoResults.get(0)
+                var snip = ("Country: " + addr.countryName + ", State: " + addr.adminArea + ", Locality: " + addr.locality)
                 var latLng = LatLng(addr.getLatitude(), addr.getLongitude())
-                mMap!!.addMarker(MarkerOptions().position(latLng).title(location.toString()))
+                mMap!!.addMarker(MarkerOptions().position(latLng).title(location.toString()).snippet(snip))
                 mMap!!.moveCamera(CameraUpdateFactory.newLatLng(latLng))
 
             }
